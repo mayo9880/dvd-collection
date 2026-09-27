@@ -1,18 +1,71 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>My DVD Collection</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
 
+
 <body>
+
+
+<header>
 
     <h1>My DVD Collection</h1>
 
     <p>My little movie library ♡</p>
+
+</header>
+
+
+<section class="controls">
+
+    <input
+        id="searchInput"
+        type="text"
+        placeholder="Search my collection..."
+    >
+
+    <button id="coverButton">
+        Covers
+    </button>
+
+    <button id="listButton">
+        List
+    </button>
+
+</section>
+
+
+<div
+    id="movieCount"
+    class="movie-count"
+></div>
+
+
+<main
+    id="movieContainer"
+    class="movie-container"
+></main>
+
+
+<script src="script.js"></script>
+
 
 </body>
 
