@@ -35,51 +35,76 @@ function loadMovies() {
 // HANDLE GOOGLE SHEET DATA
 // -------------------------------------
 function handleQueryResponse(response) {
+
     if (response.isError()) {
+
         console.error(
             "Google Sheets error:",
             response.getMessage(),
             response.getDetailedMessage()
         );
 
-        movieCount.textContent = "";
-        movieContainer.innerHTML = `
-            <p>
-                Could not load the movie collection. Check that the Google Sheet is
-                shared as <strong>Anyone with the link → Viewer</strong> and that
-                <strong>${sheetName}</strong> exactly matches the sheet tab name.
-            </p>
-        `;
+        movieContainer.innerHTML =
+            "<p>Could not load the movie collection.</p>";
+
         return;
     }
 
     const data = response.getDataTable();
+
     movies = [];
 
     for (let row = 0; row < data.getNumberOfRows(); row++) {
+
         const title = data.getValue(row, 0);
 
+        // Skip blank rows
         if (!title) {
             continue;
         }
 
-        movies.push({
+        let cover = data.getFormattedValue(row, 4);
+
+        // Automatically add images/ if only a filename is entered
+        if (
+            cover &&
+            !cover.startsWith("images/") &&
+            !cover.startsWith("http")
+        ) {
+            cover = "images/" + cover;
+        }
+
+        const movie = {
+
             title: String(title).trim(),
-            year: data.getFormattedValue(row, 1),
-            format: data.getFormattedValue(row, 2),
-            genre: data.getFormattedValue(row, 3),
-            cover: data.getFormattedValue(row, 4),
-            favorite: data.getFormattedValue(row, 5),
-            watched: data.getFormattedValue(row, 6),
-            notes: data.getFormattedValue(row, 7)
-        });
+
+            year:
+                data.getFormattedValue(row, 1),
+
+            format:
+                data.getFormattedValue(row, 2),
+
+            genre:
+                data.getFormattedValue(row, 3),
+
+            cover: cover,
+
+            notes:
+                data.getFormattedValue(row, 5)
+        };
+
+        movies.push(movie);
     }
 
-    // Automatically alphabetize the movies
+    // Automatically alphabetize
     movies.sort((a, b) =>
-        a.title.localeCompare(b.title, undefined, {
-            ignorePunctuation: true
-        })
+        a.title.localeCompare(
+            b.title,
+            undefined,
+            {
+                ignorePunctuation: true
+            }
+        )
     );
 
     displayMovies(movies);
